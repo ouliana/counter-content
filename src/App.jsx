@@ -1,17 +1,41 @@
+import { string } from 'prop-types'
 import { useReducer } from 'react'
+import { useContext } from 'react'
+import CounterContext from './CounterContext';
+
+Button.propTypes = {
+  type: string,
+  label: string
+}
+
+function Display() {
+  const [counter, ] = useContext(CounterContext);
+  return <div>
+    {counter}
+  </div>
+}
+
+function Button({ type, label}) {
+  const [, dispatch] = useContext(CounterContext);
+  return (
+    <button onClick={() => dispatch({ type })}>
+      { label}
+    </button>
+  )
+}
 
 function App() {
   const [counter, counterDispatch] = useReducer(counterReducer, 0);
 
   return (
-    <>
-      <div>{counter}</div>
+    <CounterContext.Provider value={[counter, counterDispatch]}>
+      <Display counter={counter} />
       <div>
-        <button onClick={() => counterDispatch({type: 'INC'})}>+</button> 
-        <button onClick={() => counterDispatch({type: 'DEC'})}>-</button> 
-        <button onClick={() => counterDispatch({type: 'ZERO'})}>0</button> 
+        <Button type='INC' label='+'/> 
+        <Button type='DEC' label='-'/> 
+        <Button type='ZERO' label='0'/> 
       </div>
-    </>
+    </CounterContext.Provider>
   )
 }
 
